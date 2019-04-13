@@ -24,13 +24,14 @@ public class MainActivity extends AppCompatActivity {
     LayoutInflater layoutInflater;
     final int ID_REMOVE_BUTTON = 412351652;
     int[][]operands = null;
+    float[][] operandsValue;
 
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        linearLayout =(LinearLayout)findViewById(R.id.linearlayout);
+        linearLayout =findViewById(R.id.linearlayout);
         linearLayout1 = findViewById(R.id.equationLayout);
         layoutInflater = getLayoutInflater();
     }
@@ -70,7 +71,8 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public void isReady(View view){
-        int[][] mymass = new int[10][10]; //тупой костыль из за тупой инициализации массивов
+        int[][] mymass = new int[lastIndexNumber][3];
+        float[][] mymassValues = new float[lastIndexNumber][3];// костыль из за  инициализации массивов
         for(int i = 0; i<= lastIndexNumber; i++){
             View myView = linearLayout.getChildAt(i);
             EditText sign = myView.findViewById(R.id.sign);
@@ -85,7 +87,39 @@ public class MainActivity extends AppCompatActivity {
                 sign.setBackgroundColor(Color.RED);
                 return;
             }
-            Log.i("MyTag", String.valueOf(i));
+
+            EditText number =  myView.findViewById(R.id.number);
+            if(number.getText().toString().trim().length()>0){
+                if(number.getText().toString().toUpperCase().equals("X")){
+                    mymass[i][1] = 0;
+                } else{
+                    mymass[i][1] = 1;
+                    Log.i("MyTag","number is const");
+                    float value = Integer.parseInt(number.getText().toString());
+                    mymassValues[i][1] = value;
+                    Log.i("MyTag", String.valueOf(value));
+                }
+            } else{
+                number.setBackgroundColor(Color.RED);
+                return;
+            }
+
+            EditText exponent = myView.findViewById(R.id.exponent);
+            if(exponent.getText().toString().trim().length()>0){
+                if(exponent.getText().toString().toUpperCase().equals("X")){
+                    mymass[i][2] = 0;
+                    Log.i("MyTag","exponent is X");
+                } else{
+                    mymass[i][2] = 1;
+                    Log.i("MyTag","exponent is const");
+                    float value = Integer.parseInt(exponent.getText().toString());
+                    mymassValues[i][2] = value;
+                    Log.i("MyTag",String.valueOf(value));
+                }
+            }else{
+                exponent.setBackgroundColor(Color.RED);
+                return;
+            }
         }
     }
 }
