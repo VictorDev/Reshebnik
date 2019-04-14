@@ -20,10 +20,10 @@ import android.widget.TextView;
 public class MainActivity extends AppCompatActivity {
     boolean isFirstNumber = true;
     int lastIndexNumber;
-    LinearLayout linearLayout, linearLayout1;
+    LinearLayout linearLayout, linearLayout1, equationTvLayout;
     LayoutInflater layoutInflater;
     final int ID_REMOVE_BUTTON = 412351652;
-    int[][]operands = null;
+    int[][]operands;
     float[][] operandsValue;
 
 
@@ -33,6 +33,7 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
         linearLayout =findViewById(R.id.linearlayout);
         linearLayout1 = findViewById(R.id.equationLayout);
+        equationTvLayout = findViewById(R.id.equationTvLayout);
         layoutInflater = getLayoutInflater();
     }
 
@@ -71,17 +72,19 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public void isReady(View view){
-        int[][] mymass = new int[lastIndexNumber][3];
-        float[][] mymassValues = new float[lastIndexNumber][3];// костыль из за  инициализации массивов
+        operands = new int[lastIndexNumber+1][3];
+        operandsValue = new float[lastIndexNumber+1][3];// костыль из за  инициализации массивов
         for(int i = 0; i<= lastIndexNumber; i++){
             View myView = linearLayout.getChildAt(i);
             EditText sign = myView.findViewById(R.id.sign);
             if(sign.getText().toString().trim().length()>0){
                 if(sign.getText().toString().equals("+")){
-                    mymass[i][0] = 0;
+                    operands[i][0] = 0;
+                Log.i("MyTag","sign is +");
 
                 } else{
-                    mymass[i][0] = 1;
+                    operands[i][0] = 1;
+                    Log.i("MyTag","sign is -");
                 }
             } else{
                 //оп
@@ -91,13 +94,14 @@ public class MainActivity extends AppCompatActivity {
 
             EditText number =  myView.findViewById(R.id.number);
             if(number.getText().toString().trim().length()>0){
-                if(number.getText().toString().toUpperCase().equals("X")){
-                    mymass[i][1] = 0;
+                if(number.getText().toString().toUpperCase().equals("Х")||number.getText().toString().toUpperCase().equals("X")){
+                    operands[i][1] = 0;
+                    Log.i("MyTag","number is X");
                 } else{
-                    mymass[i][1] = 1;
+                    operands[i][1] = 1;
                     Log.i("MyTag","number is const");
                     float value = Integer.parseInt(number.getText().toString());
-                    mymassValues[i][1] = value;
+                    operandsValue[i][1] = value;
                     Log.i("MyTag", String.valueOf(value));
                 }
             } else{
@@ -107,20 +111,52 @@ public class MainActivity extends AppCompatActivity {
 
             EditText exponent = myView.findViewById(R.id.exponent);
             if(exponent.getText().toString().trim().length()>0){
-                if(exponent.getText().toString().toUpperCase().equals("X")){
-                    mymass[i][2] = 0;
+                if(exponent.getText().toString().toUpperCase().equals("Х")||exponent.getText().toString().toUpperCase().equals("X")){
+                    operands[i][2] = 0;
                     Log.i("MyTag","exponent is X");
                 } else{
-                    mymass[i][2] = 1;
+                    operands[i][2] = 1;
                     Log.i("MyTag","exponent is const");
                     float value = Integer.parseInt(exponent.getText().toString());
-                    mymassValues[i][2] = value;
+                    operandsValue[i][2] = value;
                     Log.i("MyTag",String.valueOf(value));
                 }
             }else{
                 exponent.setBackgroundColor(Color.RED);
                 return;
             }
+        }
+        createTextViewEquation();
+    }
+
+    private void createTextViewEquation(){
+        for(int i =0; i<=lastIndexNumber; i++){
+            View item = layoutInflater.inflate(R.layout.operandtv, equationTvLayout, false);
+            TextView sign = item.findViewById(R.id.signtv);
+            if(operands[i][0]==0){
+                sign.setText("+");
+            }else{
+                sign.setText("-");
+            }
+
+            TextView number = item.findViewById(R.id.numbertv);
+            if(operands[i][1]==0){
+                number.setText("x");
+            }else{
+                String n = String.valueOf(operandsValue[i][1]);
+                number.setText(n);
+            }
+
+            TextView exponent = item.findViewById(R.id.exponenttv);
+            if(operands[i][2]==0){
+                exponent.setText("x");
+            }else{
+                String n = String.valueOf(operandsValue[i][2]);
+                exponent.setText(n);
+            }
+
+            equationTvLayout.addView(item);
+
         }
     }
 }

@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<HorizontalScrollView
-    android:id="@+id/horizontalSVtext"
+<FrameLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
@@ -45,4 +44,4 @@
         app:layout_constraintBottom_toTopOf="@+id/numbertv"
         app:layout_constraintStart_toEndOf="@+id/numbertv" />
 </android.support.constraint.ConstraintLayout>
-</HorizontalScrollView>
+</FrameLayout>
