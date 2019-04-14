@@ -1,0 +1,26 @@
+ public void addOperand(View view){
+
+        View item = layoutInflater.inflate(R.layout.operand,linearLayout,false);
+        final EditText number = item.findViewById(R.id.number);
+        final EditText factor = item.findViewById(R.id.factor);
+        number.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+                String text = number.getText().toString();
+                if(text.trim().length()>0 && (text.toUpperCase().equals("Х")||text.toUpperCase().equals("X"))) {
+                    if (!(factor.isShown())) {
+                        factor
+                    }
+                }
+            }
+        });

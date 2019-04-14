@@ -17,9 +17,19 @@
             android:gravity="right"
             android:hint="+/-"
             android:maxLength="1"
+            app:layout_constraintBottom_toBottomOf="@+id/factor"
+            app:layout_constraintEnd_toStartOf="@+id/factor"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="@+id/factor" />
+
+        <EditText
+            android:id="@+id/factor"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:hint="c"
+            android:inputType="number"
             app:layout_constraintBottom_toBottomOf="@+id/number"
             app:layout_constraintEnd_toStartOf="@+id/number"
-            app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="@+id/number" />
 
         <EditText
@@ -27,23 +37,25 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="8dp"
+            android:layout_marginEnd="20dp"
             android:layout_marginBottom="8dp"
             android:hint="x"
             app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toStartOf="@+id/exponent"
-            app:layout_constraintStart_toEndOf="@+id/sign"
+            app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
 
         <EditText
             android:id="@+id/exponent"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_marginStart="8dp"
             android:layout_marginTop="8dp"
             android:layout_marginBottom="8dp"
             android:hint="n"
             android:text=""
             android:textSize="12sp"
             app:layout_constraintBottom_toBottomOf="@+id/number"
+            app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toEndOf="@+id/number"
             app:layout_constraintTop_toTopOf="parent" />
     </android.support.constraint.ConstraintLayout>

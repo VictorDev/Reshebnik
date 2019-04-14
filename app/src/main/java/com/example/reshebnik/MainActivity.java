@@ -2,6 +2,8 @@ package com.example.reshebnik;
 
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.Button;
@@ -17,6 +19,7 @@ import android.view.ViewGroup.LayoutParams;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+
 public class MainActivity extends AppCompatActivity {
     boolean isFirstNumber = true;
     int lastIndexNumber;
@@ -26,6 +29,11 @@ public class MainActivity extends AppCompatActivity {
     int[][]operands;
     float[][] operandsValue;
 
+    //выпадающее поле для коэффициента
+    //убрать лишние float значения в тексте
+    //убрать первый плюс
+    //кривое отображение = 0
+    //добавить выравнивание по левой стороге для экспонента
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -40,7 +48,6 @@ public class MainActivity extends AppCompatActivity {
     public void addOperand(View view){
 
         View item = layoutInflater.inflate(R.layout.operand,linearLayout,false);
-        item.getLayoutParams().width = LayoutParams.WRAP_CONTENT;
         linearLayout.addView(item);
         if(isFirstNumber){
             final Button removeButton = new Button(this);
@@ -72,8 +79,8 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public void isReady(View view){
-        operands = new int[lastIndexNumber+1][3];
-        operandsValue = new float[lastIndexNumber+1][3];// костыль из за  инициализации массивов
+        operands = new int[lastIndexNumber+1][4];
+        operandsValue = new float[lastIndexNumber+1][4];
         for(int i = 0; i<= lastIndexNumber; i++){
             View myView = linearLayout.getChildAt(i);
             EditText sign = myView.findViewById(R.id.sign);
@@ -125,6 +132,17 @@ public class MainActivity extends AppCompatActivity {
                 exponent.setBackgroundColor(Color.RED);
                 return;
             }
+
+            EditText factor = myView.findViewById(R.id.factor);
+            if(factor.getText().toString().trim().length()>0){
+                float f = Integer.valueOf(factor.getText().toString());
+                operands[i][3] = 1;
+                operandsValue[i][3] = f;
+                Log.i("MyTag", "factor x = "+ String.valueOf(f));
+            }else {
+                operands[i][3] = 0;
+                Log.i("MyTag", "not factor");
+            }
         }
         createTextViewEquation();
     }
@@ -141,22 +159,51 @@ public class MainActivity extends AppCompatActivity {
 
             TextView number = item.findViewById(R.id.numbertv);
             if(operands[i][1]==0){
-                number.setText("x");
+                number.setText("X");
             }else{
                 String n = String.valueOf(operandsValue[i][1]);
-                number.setText(n);
+                String[] splitter = n.split("\\.");
+                int c = splitter[1].length();
+                if(c>1){
+                    number.setText(n);
+                }else{
+                    String n1 = String.valueOf((int)operandsValue[i][1]);
+                    number.setText(n1);
+                }
+
             }
 
             TextView exponent = item.findViewById(R.id.exponenttv);
             if(operands[i][2]==0){
                 exponent.setText("x");
             }else{
-                String n = String.valueOf(operandsValue[i][2]);
+                String n = String.valueOf((int)operandsValue[i][2]);
                 exponent.setText(n);
+            }
+
+            TextView factor = item.findViewById(R.id.factortv);
+            if(operands[i][3]==1){
+                String n = String.valueOf(operandsValue[i][3]);
+                String[] splitter = n.split("\\.");
+                int c = splitter[1].length();
+                if(c>1){
+                    factor.setText(n);
+                }else{
+                    String n1 = String.valueOf((int)operandsValue[i][3]);
+                    factor.setText(n1);
+                }
+            } else{
+                factor.setText(" ");
             }
 
             equationTvLayout.addView(item);
 
         }
+        LayoutParams lpView = new LayoutParams(LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT);
+
+        TextView tv = new TextView(this);
+        tv.setText(" = 0");
+        tv.setLayoutParams(lpView);
+        equationTvLayout.addView(tv);
     }
 }
