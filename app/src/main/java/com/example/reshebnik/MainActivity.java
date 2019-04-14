@@ -84,6 +84,7 @@ public class MainActivity extends AppCompatActivity {
                     mymass[i][0] = 1;
                 }
             } else{
+                //оп
                 sign.setBackgroundColor(Color.RED);
                 return;
             }
