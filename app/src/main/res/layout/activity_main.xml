@@ -7,6 +7,16 @@
     android:orientation="vertical"
     tools:context=".MainActivity">
 
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="ДАНО"/>
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="x - число или переменная ОБЯЗАТЕЛЬНО ЗАПОЛНЯТЬ \n n - степень ОБЯЗАТЕЛЬНО ЗАПОЛНЯТЬ \n c - коэффициент ЗАПОЛНЯТЬ НЕОБЯЗАТЕЛЬНО"/>
+
 
     <HorizontalScrollView
         android:id="@+id/hScrlvw"
@@ -84,8 +94,7 @@
         <EditText
             android:id="@+id/fault"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:inputType="number"/>
+            android:layout_height="wrap_content" />
     </LinearLayout>
     <Button
         android:onClick="isReady"
