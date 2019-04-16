@@ -245,57 +245,53 @@ public class MainActivity extends AppCompatActivity {
         float limit3;
         f1 = 0;
         f2 = 0;
+        f3 = 0;
+        limit3 = 0;
         //while(){
             createTextLimit();
-            int[] limits = {limit1,limit2};
-            for(int j = 0; j<2; j++) {
-                float equationResult = 0;
-                for (int i = 0; i <= lastIndexNumber; i++) {
-                    int sign = operands[i][0];
-                    float factor;
-                    if (operands[i][3] == 1) {
-                        factor = operandsValue[i][3];
-                    } else {
-                        factor = 1;
-                    }
-                    float number;
-                    if (operands[i][1] == 0) {
-                        number = limits[j];
-                    } else {
-                        number = operandsValue[i][1];
-                    }
-                    float exponent;
-                    if (operands[i][2]==0){
-                        exponent = limits[j];
-                    }else{
-                        exponent = operandsValue[i][2];
-                    }
-                    double valueOperand = sign*factor*Math.pow(number,exponent);
-                    float spareValue = (float) valueOperand;
-                    equationResult+=spareValue;
-                }
-                if(j==0){
-                    f1 = equationResult;
-                } else{
-                    f2 = equationResult;
-                }
-
-               /* limit3 = limit1 - (f1*(limit2 - limit1)/(f2-f1));
-                Log.i("MyTag","limit3 is "+limit3); */
-            }
-        limit3 = limit1 - (f1*(limit2 - limit1)/(f2-f1));
-        Log.i("MyTag","limit3 is "+limit3);
-        createFValue(f1,f2);
-        createChord(f1,f2,limit3);
-        createNewInterval(limit3);
+            f1 = calculateEquation(limit1);
+            f2 = calculateEquation(limit2);
+            limit3 = limit1 - (f1*(limit2 - limit1)/(f2-f1));
+            f3 = calculateEquation(limit3);
+            Log.i("MyTag","limit3 is "+limit3);
+            createFValue(f1,f2);
+            createChord(f1,f2,limit3);
+            createNewInterval(limit3);
+            createValue(f3, limit3);
 
 
         //}
         Log.i("MyTag","f1 is " + f1 + " f2 is " + f2);
     }
 
-    void calculateEquation(float limit){
-        
+    float calculateEquation(float limit){
+        float equationResult = 0;
+        for (int i = 0; i <= lastIndexNumber; i++) {
+            int sign = operands[i][0];
+            float factor;
+            if (operands[i][3] == 1) {
+                factor = operandsValue[i][3];
+            } else {
+                factor = 1;
+            }
+            float number;
+            if (operands[i][1] == 0) {
+                number = limit;
+            } else {
+                number = operandsValue[i][1];
+            }
+            float exponent;
+            if (operands[i][2]==0){
+                exponent = limit;
+            }else{
+                exponent = operandsValue[i][2];
+            }
+            double valueOperand = sign*factor*Math.pow(number,exponent);
+            float spareValue = (float) valueOperand;
+            equationResult+=spareValue;
+        }
+        return equationResult;
+
     }
 
    /* boolean checkInterval(float a, float b, float c){
@@ -311,8 +307,9 @@ public class MainActivity extends AppCompatActivity {
 
    void createChord(float f1, float f2, float limit3){
 
-       //отступить 4dp сверху для х= а и для = limit3
-       //добавить знак умножения для (в-а)
+       LinearLayout ln = new LinearLayout(this); //костыль
+       ln.setLayoutParams(layoutParams);
+
        View chord = layoutInflater.inflate(R.layout.chord, mainLayout, false);
 
        TextView tvA = chord.findViewById(R.id.a);
@@ -334,7 +331,9 @@ public class MainActivity extends AppCompatActivity {
        TextView tvLimit3 = chord.findViewById(R.id.limit3tv);
        tvLimit3.setText("   = " + String.valueOf(limit3));
 
-       mainLayout.addView(chord);
+       ln.addView(chord);
+
+       mainLayout.addView(ln);
    }
 
    void createFValue(float f1, float f2){
@@ -345,16 +344,18 @@ public class MainActivity extends AppCompatActivity {
    }
 
    void createValue(float f3, float limit3){
-       TextView tvValue = new TextView(this);
-       tvValue.setLayoutParams(layoutParams);
-       tvValue.setText("f("+limit3+") = "+f3);
-       mainLayout.addView(tvValue);
+       TextView tvValue1 = new TextView(this);
+       tvValue1.setLayoutParams(layoutParams);
+       tvValue1.setText("f("+limit3+") = "+f3);
+       mainLayout.addView(tvValue1);
+       Log.i("MyTag","Вьюшка создалась");
    }
 
    void createNewInterval(float limit3){
-       TextView tvValue = new TextView(this);
-       tvValue.setLayoutParams(layoutParams);
-       tvValue.setText("x е ["+limit1+";"+limit3 + "] и ["+limit3+";"+limit2+"]");
-       mainLayout.addView(tvValue);
+       TextView tvValue2 = new TextView(this);
+       tvValue2.setLayoutParams(layoutParams);
+       tvValue2.setText("x е ["+limit1+";"+limit3 + "] и ["+limit3+";"+limit2+"]");
+       mainLayout.addView(tvValue2);
    }
+
 }
