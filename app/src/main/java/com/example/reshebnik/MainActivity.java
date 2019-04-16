@@ -26,7 +26,7 @@ public class MainActivity extends AppCompatActivity {
     LinearLayout linearLayout, linearLayout1, equationTvLayout, mainLayout;
     LayoutInflater layoutInflater;
     float fault;
-    int limit1, limit2;
+    float limit1, limit2;
     final int ID_REMOVE_BUTTON = 412351652;
     int[][]operands;
     float[][] operandsValue;
@@ -155,7 +155,7 @@ public class MainActivity extends AppCompatActivity {
             EditText limit1ET = findViewById(R.id.etX1);
             if(limit1ET.getText().toString().trim().length()>0){
                 String e = limit1ET.getText().toString();
-                limit1 = Integer.parseInt(e);
+                limit1 = Float.parseFloat(e);
             }else{
                 limit1ET.setBackgroundColor(Color.RED);
                 return;
@@ -164,7 +164,7 @@ public class MainActivity extends AppCompatActivity {
             EditText limit2ET = findViewById(R.id.etX2);
             if(limit2ET.getText().toString().trim().length()>0){
                 String e = limit2ET.getText().toString();
-                limit2 = Integer.parseInt(e);
+                limit2 = Float.parseFloat(e);
             }else{
                 limit2ET.setBackgroundColor(Color.RED);
                 return;
@@ -242,12 +242,20 @@ public class MainActivity extends AppCompatActivity {
 
     void foundRoot(){
         float f1,f2,f3;
-        float limit3;
+        float limit3 = limit1 + 100;
         f1 = 0;
         f2 = 0;
         f3 = 0;
-        limit3 = 0;
-        //while(){
+        int p = 0;
+        boolean isNoFirst = false;
+        while(checkInterval(limit1,limit3,limit2)){
+            if(isNoFirst) {
+                selectInterval(f1,f3,limit3);
+            }
+            if(p>6){
+                return;
+            }
+            isNoFirst = true;
             createTextLimit();
             f1 = calculateEquation(limit1);
             f2 = calculateEquation(limit2);
@@ -258,10 +266,17 @@ public class MainActivity extends AppCompatActivity {
             createChord(f1,f2,limit3);
             createNewInterval(limit3);
             createValue(f3, limit3);
+            p++;
+        }
+        Log.i("MyTag","ОТВЕТ ЭТО " + limit3);
+    }
 
-
-        //}
-        Log.i("MyTag","f1 is " + f1 + " f2 is " + f2);
+    void selectInterval(float lim1, float lim3, float lim){
+        if((lim1>0&&lim3<0)||(lim1<0&&lim3>0)){
+            limit2 = lim;
+        }else{
+            limit1 = lim;
+        }
     }
 
     float calculateEquation(float limit){
@@ -294,9 +309,19 @@ public class MainActivity extends AppCompatActivity {
 
     }
 
-   /* boolean checkInterval(float a, float b, float c){
+    boolean checkInterval(float a, float b, float c){
+        float v12 = Math.abs(Math.abs(a)-Math.abs(b));
+        Log.i("MyTag","v12 is "+v12);
+        float bb = Math.abs(b);
+        float cc = Math.abs(c);
+        Log.i("MyTag","bb is "+String.valueOf(bb)+" cc is "+String.valueOf(cc));
+        float v23 = Math.abs(Math.abs(b)-Math.abs(c));
+        Log.i("MyTag","v23 is "+v23);
+        boolean cheking = v12<=fault||v23<=fault;
+        Log.i("MyTag", "cheking is "+cheking);
+        return !cheking;
 
-    } */
+    }
 
    void createTextLimit(){
        TextView tv = new TextView(this);
