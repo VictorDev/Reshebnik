@@ -18,6 +18,7 @@ import android.view.View;
 import android.view.ViewGroup.LayoutParams;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import java.math.BigDecimal;
 import java.math.RoundingMode;
@@ -255,7 +256,8 @@ public class MainActivity extends AppCompatActivity {
             if(isNoFirst) {
                 selectInterval(f1,f3,limit3);
             }
-            if(p>6){
+            if(p>15){
+                Toast.makeText(this,"Ошибка, нет корня", Toast.LENGTH_LONG).show();
                 return;
             }
             isNoFirst = true;
