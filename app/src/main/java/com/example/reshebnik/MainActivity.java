@@ -19,6 +19,9 @@ import android.view.ViewGroup.LayoutParams;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import java.math.BigDecimal;
+import java.math.RoundingMode;
+
 
 public class MainActivity extends AppCompatActivity {
     boolean isFirstNumber = true;
@@ -260,7 +263,15 @@ public class MainActivity extends AppCompatActivity {
             f1 = calculateEquation(limit1);
             f2 = calculateEquation(limit2);
             limit3 = limit1 - (f1*(limit2 - limit1)/(f2-f1));
+
+            BigDecimal bd = new BigDecimal(limit3).setScale(3, RoundingMode.HALF_EVEN);
+            limit3 = bd.floatValue();
+
             f3 = calculateEquation(limit3);
+
+            BigDecimal bd1 = new BigDecimal(f3).setScale(3, RoundingMode.HALF_EVEN);
+            f3 = bd1.floatValue();
+
             Log.i("MyTag","limit3 is "+limit3);
             createFValue(f1,f2);
             createChord(f1,f2,limit3);
@@ -268,6 +279,11 @@ public class MainActivity extends AppCompatActivity {
             createValue(f3, limit3);
             p++;
         }
+        TextView tv = new TextView(this);
+        tv.setLayoutParams(layoutParams);
+        tv.setText("ОТВЕТ "+limit3);
+        mainLayout.addView(tv);
+
         Log.i("MyTag","ОТВЕТ ЭТО " + limit3);
     }
 
