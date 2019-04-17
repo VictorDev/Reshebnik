@@ -27,7 +27,7 @@ import java.math.RoundingMode;
 public class MainActivity extends AppCompatActivity {
     boolean isFirstNumber = true;
     int lastIndexNumber;
-    LinearLayout linearLayout, linearLayout1, equationTvLayout, mainLayout;
+    LinearLayout linearLayout, outLayout, linearLayout1, equationTvLayout, mainLayout;
     LayoutInflater layoutInflater;
     float fault;
     float limit1, limit2;
@@ -46,8 +46,10 @@ public class MainActivity extends AppCompatActivity {
         linearLayout1 = findViewById(R.id.equationLayout);
         equationTvLayout = findViewById(R.id.equationTvLayout);
         mainLayout = findViewById(R.id.mainLayout);
+        outLayout = findViewById(R.id.outLayout);
         layoutParams = new LayoutParams(LayoutParams.WRAP_CONTENT,LayoutParams.WRAP_CONTENT);
         layoutInflater = getLayoutInflater();
+
 
     }
 
@@ -148,7 +150,7 @@ public class MainActivity extends AppCompatActivity {
 
             EditText factor = myView.findViewById(R.id.factor);
             if(factor.getText().toString().trim().length()>0){
-                float f = Integer.valueOf(factor.getText().toString());
+                float f = Float.valueOf(factor.getText().toString());
                 operands[i][3] = 1;
                 operandsValue[i][3] = f;
                 Log.i("MyTag", "factor x = "+ String.valueOf(f));
@@ -187,7 +189,13 @@ public class MainActivity extends AppCompatActivity {
 
 
             }
-        createTextViewEquation();
+        if(method==2) {
+            foundRoot();
+        }else if(method ==1){
+            foundRootS();
+        }else{
+            Toast.makeText(this,"Выберете метод решения", Toast.LENGTH_LONG).show();
+        }
     }
 
     private void createTextViewEquation(){
@@ -251,20 +259,14 @@ public class MainActivity extends AppCompatActivity {
         View zero = layoutInflater.inflate(R.layout.zero, equationTvLayout, false);
         equationTvLayout.addView(zero);
 
-        if(method==2) {
-            foundRoot();
-        }else if(method ==1){
-            foundRootS();
-        }else{
-            Toast.makeText(this,"Выберете метод решения", Toast.LENGTH_LONG).show();
-        }
+
     }
 
     void createSLimit(float limit3){
         TextView tvSLimit = new TextView(this);
         tvSLimit.setLayoutParams(layoutParams);
         tvSLimit.setText("x = "+limit3);
-        mainLayout.addView(tvSLimit);
+        outLayout.addView(tvSLimit);
     }
 
     void foundRootS(){
@@ -275,11 +277,14 @@ public class MainActivity extends AppCompatActivity {
         f3 = 0;
         int p = 0;
         boolean isNoFirst = false;
+        outLayout.removeAllViews();
+        equationTvLayout.removeAllViews();
+        createTextViewEquation();
         while(checkInterval(limit1,limit3,limit2)){
             if(isNoFirst) {
                 selectInterval(f1,f3,limit3);
             }
-            if(p>15){
+            if(p>20){
                 Toast.makeText(this,"Ошибка, нет корня", Toast.LENGTH_LONG).show();
                 return;
             }
@@ -306,7 +311,7 @@ public class MainActivity extends AppCompatActivity {
         TextView tv = new TextView(this);
         tv.setLayoutParams(layoutParams);
         tv.setText("ОТВЕТ "+limit3);
-        mainLayout.addView(tv);
+        outLayout.addView(tv);
     }
 
     void foundRoot(){
@@ -317,11 +322,14 @@ public class MainActivity extends AppCompatActivity {
         f3 = 0;
         int p = 0;
         boolean isNoFirst = false;
+        outLayout.removeAllViews();
+        equationTvLayout.removeAllViews();
+        createTextViewEquation();
         while(checkInterval(limit1,limit3,limit2)){
             if(isNoFirst) {
                 selectInterval(f1,f3,limit3);
             }
-            if(p>15){
+            if(p>20){
                 Toast.makeText(this,"Ошибка, нет корня", Toast.LENGTH_LONG).show();
                 return;
             }
@@ -349,7 +357,7 @@ public class MainActivity extends AppCompatActivity {
         TextView tv = new TextView(this);
         tv.setLayoutParams(layoutParams);
         tv.setText("ОТВЕТ "+limit3);
-        mainLayout.addView(tv);
+        outLayout.addView(tv);
 
         Log.i("MyTag","ОТВЕТ ЭТО " + limit3);
     }
@@ -409,8 +417,8 @@ public class MainActivity extends AppCompatActivity {
    void createTextLimit(){
        TextView tv = new TextView(this);
        tv.setLayoutParams(layoutParams);
-       tv.setText("E = ["+limit1+";"+limit2+"]");
-       mainLayout.addView(tv);
+       tv.setText("Х е ["+limit1+";"+limit2+"]");
+       outLayout.addView(tv);
    }
 
    void createChord(float f1, float f2, float limit3){
@@ -418,7 +426,7 @@ public class MainActivity extends AppCompatActivity {
        LinearLayout ln = new LinearLayout(this); //костыль
        ln.setLayoutParams(layoutParams);
 
-       View chord = layoutInflater.inflate(R.layout.chord, mainLayout, false);
+       View chord = layoutInflater.inflate(R.layout.chord, outLayout, false);
 
        TextView tvA = chord.findViewById(R.id.a);
        tvA.setText("x = "+ limit1 + " -   ");
@@ -441,21 +449,21 @@ public class MainActivity extends AppCompatActivity {
 
        ln.addView(chord);
 
-       mainLayout.addView(ln);
+       outLayout.addView(ln);
    }
 
    void createFValue(float f1, float f2){
        TextView tvValue = new TextView(this);
        tvValue.setLayoutParams(layoutParams);
        tvValue.setText("f("+limit1+") = "+f1 +"\n f("+limit2+") = "+f2);
-       mainLayout.addView(tvValue);
+       outLayout.addView(tvValue);
    }
 
    void createValue(float f3, float limit3){
        TextView tvValue1 = new TextView(this);
        tvValue1.setLayoutParams(layoutParams);
        tvValue1.setText("f("+limit3+") = "+f3);
-       mainLayout.addView(tvValue1);
+       outLayout.addView(tvValue1);
        Log.i("MyTag","Вьюшка создалась");
    }
 
@@ -463,7 +471,7 @@ public class MainActivity extends AppCompatActivity {
        TextView tvValue2 = new TextView(this);
        tvValue2.setLayoutParams(layoutParams);
        tvValue2.setText("x е ["+limit1+";"+limit3 + "] и ["+limit3+";"+limit2+"]");
-       mainLayout.addView(tvValue2);
+       outLayout.addView(tvValue2);
    }
 
 }
