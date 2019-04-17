@@ -64,6 +64,7 @@
 
         <EditText
             android:id="@+id/etX1"
+            android:digits="0123456789.-"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             />
@@ -74,6 +75,7 @@
             android:text=" ; " />
 
         <EditText
+            android:digits="0123456789.-"
             android:id="@+id/etX2"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -98,9 +100,29 @@
 
         <EditText
             android:id="@+id/fault"
+            android:digits="0123456789.-"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content" />
     </LinearLayout>
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Выберете метод решения"/>
+    <RadioGroup
+        android:layout_width="wrap_content"
+        android:orientation="vertical"
+        android:layout_height="wrap_content">
+        <RadioButton
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="метод половинного деления"
+            android:onClick="calS"/>
+        <RadioButton
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="метод хорд"
+            android:onClick="calC" />
+    </RadioGroup>
     <Button
         android:onClick="isReady"
         android:id="@+id/ready"

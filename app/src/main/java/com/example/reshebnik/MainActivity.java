@@ -35,6 +35,7 @@ public class MainActivity extends AppCompatActivity {
     int[][]operands;
     float[][] operandsValue;
     LayoutParams layoutParams;
+    int method;
 
 
     @Override
@@ -47,6 +48,7 @@ public class MainActivity extends AppCompatActivity {
         mainLayout = findViewById(R.id.mainLayout);
         layoutParams = new LayoutParams(LayoutParams.WRAP_CONTENT,LayoutParams.WRAP_CONTENT);
         layoutInflater = getLayoutInflater();
+
     }
 
     public void addOperand(View view){
@@ -80,6 +82,14 @@ public class MainActivity extends AppCompatActivity {
             linearLayout1.removeView(deleteButton);
             isFirstNumber = true;
         }
+    }
+
+    public void calS(View view) {
+        method = 1;
+    }
+
+    public void calC(View view){
+        method = 2;
     }
 
     public void isReady(View view){
@@ -241,7 +251,62 @@ public class MainActivity extends AppCompatActivity {
         View zero = layoutInflater.inflate(R.layout.zero, equationTvLayout, false);
         equationTvLayout.addView(zero);
 
-        foundRoot();
+        if(method==2) {
+            foundRoot();
+        }else if(method ==1){
+            foundRootS();
+        }else{
+            Toast.makeText(this,"Выберете метод решения", Toast.LENGTH_LONG).show();
+        }
+    }
+
+    void createSLimit(float limit3){
+        TextView tvSLimit = new TextView(this);
+        tvSLimit.setLayoutParams(layoutParams);
+        tvSLimit.setText("x = "+limit3);
+        mainLayout.addView(tvSLimit);
+    }
+
+    void foundRootS(){
+        float f1,f2,f3;
+        float limit3 = limit1 + 100;
+        f1 = 0;
+        f2 = 0;
+        f3 = 0;
+        int p = 0;
+        boolean isNoFirst = false;
+        while(checkInterval(limit1,limit3,limit2)){
+            if(isNoFirst) {
+                selectInterval(f1,f3,limit3);
+            }
+            if(p>15){
+                Toast.makeText(this,"Ошибка, нет корня", Toast.LENGTH_LONG).show();
+                return;
+            }
+            isNoFirst = true;
+            createTextLimit();
+            f1 = calculateEquation(limit1);
+            f2 = calculateEquation(limit2);
+            limit3 = (limit1+limit2)/2;
+            BigDecimal bd = new BigDecimal(limit3).setScale(3, RoundingMode.HALF_EVEN);
+            limit3 = bd.floatValue();
+
+            f3 = calculateEquation(limit3);
+
+            BigDecimal bd1 = new BigDecimal(f3).setScale(3, RoundingMode.HALF_EVEN);
+            f3 = bd1.floatValue();
+
+            Log.i("MyTag","limit3 is "+limit3);
+            createFValue(f1,f2);
+            createSLimit(limit3);
+            createNewInterval(limit3);
+            createValue(f3, limit3);
+            p++;
+        }
+        TextView tv = new TextView(this);
+        tv.setLayoutParams(layoutParams);
+        tv.setText("ОТВЕТ "+limit3);
+        mainLayout.addView(tv);
     }
 
     void foundRoot(){
