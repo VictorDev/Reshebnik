@@ -95,6 +95,10 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public void isReady(View view){
+        /*
+            Считываем введенное уравнение и помещаем значения в массивы operands и operandsValue
+            Массив operands хранит метки для значений, а operandsValue сами значения
+         */
         operands = new int[lastIndexNumber+1][4];
         operandsValue = new float[lastIndexNumber+1][4];
         for(int i = 0; i<= lastIndexNumber; i++){
@@ -141,7 +145,6 @@ public class MainActivity extends AppCompatActivity {
                     Log.i("MyTag","exponent is const");
                     float value = Integer.parseInt(exponent.getText().toString());
                     operandsValue[i][2] = value;
-                    Log.i("MyTag",String.valueOf(value));
                 }
             }else{
                 exponent.setBackgroundColor(Color.RED);
@@ -185,10 +188,7 @@ public class MainActivity extends AppCompatActivity {
                 limit2ET.setBackgroundColor(Color.RED);
                 return;
             }
-
-
-
-            }
+        }
         if(method==2) {
             foundRoot();
         }else if(method ==1){
@@ -196,6 +196,103 @@ public class MainActivity extends AppCompatActivity {
         }else{
             Toast.makeText(this,"Выберете метод решения", Toast.LENGTH_LONG).show();
         }
+    }
+
+    void foundRootS(){
+        /*
+            Метод, который считает уравнение и выводит пошаговое решение уравнения, по методу половинного деления
+         */
+        float f1,f2,f3;
+        float limit3 = limit1 + 100;
+        f1 = 0;
+        f2 = 0;
+        f3 = 0;
+        int p = 0;
+        boolean isNoFirst = false;
+        outLayout.removeAllViews();
+        equationTvLayout.removeAllViews();
+        createTextViewEquation();
+        while(checkInterval(limit1,limit3,limit2)){
+            if(isNoFirst) {
+                selectInterval(f1,f3,limit3);
+            }
+            if(p>20){
+                Toast.makeText(this,"Ошибка, нет корня", Toast.LENGTH_LONG).show();
+                return;
+            }
+            isNoFirst = true;
+            createTextLimit();
+            f1 = calculateEquation(limit1);
+            f2 = calculateEquation(limit2);
+            limit3 = (limit1+limit2)/2;
+            BigDecimal bd = new BigDecimal(limit3).setScale(3, RoundingMode.HALF_EVEN);
+            limit3 = bd.floatValue();
+
+            f3 = calculateEquation(limit3);
+
+            BigDecimal bd1 = new BigDecimal(f3).setScale(3, RoundingMode.HALF_EVEN);
+            f3 = bd1.floatValue();
+
+            createFValue(f1,f2);
+            createSLimit(limit3);
+            createNewInterval(limit3);
+            createValue(f3, limit3);
+            p++;
+        }
+        TextView tv = new TextView(this);
+        tv.setLayoutParams(layoutParams);
+        tv.setText("ОТВЕТ "+limit3);
+        outLayout.addView(tv);
+    }
+
+    void foundRoot(){
+        /*
+            Метод, который считает уравнение и выводит пошаговое решение уравнения, по методу хорд
+         */
+        float f1,f2,f3;
+        float limit3 = limit1 + 100;
+        f1 = 0;
+        f2 = 0;
+        f3 = 0;
+        int p = 0;
+        boolean isNoFirst = false;
+        outLayout.removeAllViews();
+        equationTvLayout.removeAllViews();
+        createTextViewEquation();
+        while(checkInterval(limit1,limit3,limit2)){
+            if(isNoFirst) {
+                selectInterval(f1,f3,limit3);
+            }
+            if(p>20){
+                Toast.makeText(this,"Ошибка, нет корня", Toast.LENGTH_LONG).show();
+                return;
+            }
+            isNoFirst = true;
+            createTextLimit();
+            f1 = calculateEquation(limit1);
+            f2 = calculateEquation(limit2);
+            limit3 = limit1 - (f1*(limit2 - limit1)/(f2-f1));
+
+            BigDecimal bd = new BigDecimal(limit3).setScale(3, RoundingMode.HALF_EVEN);
+            limit3 = bd.floatValue();
+
+            f3 = calculateEquation(limit3);
+
+            BigDecimal bd1 = new BigDecimal(f3).setScale(3, RoundingMode.HALF_EVEN);
+            f3 = bd1.floatValue();
+
+            createFValue(f1,f2);
+            createChord(f1,f2,limit3);
+            createNewInterval(limit3);
+            createValue(f3, limit3);
+            p++;
+        }
+        TextView tv = new TextView(this);
+        tv.setLayoutParams(layoutParams);
+        tv.setText("ОТВЕТ "+limit3);
+        outLayout.addView(tv);
+
+        Log.i("MyTag","ОТВЕТ ЭТО " + limit3);
     }
 
     private void createTextViewEquation(){
@@ -269,98 +366,7 @@ public class MainActivity extends AppCompatActivity {
         outLayout.addView(tvSLimit);
     }
 
-    void foundRootS(){
-        float f1,f2,f3;
-        float limit3 = limit1 + 100;
-        f1 = 0;
-        f2 = 0;
-        f3 = 0;
-        int p = 0;
-        boolean isNoFirst = false;
-        outLayout.removeAllViews();
-        equationTvLayout.removeAllViews();
-        createTextViewEquation();
-        while(checkInterval(limit1,limit3,limit2)){
-            if(isNoFirst) {
-                selectInterval(f1,f3,limit3);
-            }
-            if(p>20){
-                Toast.makeText(this,"Ошибка, нет корня", Toast.LENGTH_LONG).show();
-                return;
-            }
-            isNoFirst = true;
-            createTextLimit();
-            f1 = calculateEquation(limit1);
-            f2 = calculateEquation(limit2);
-            limit3 = (limit1+limit2)/2;
-            BigDecimal bd = new BigDecimal(limit3).setScale(3, RoundingMode.HALF_EVEN);
-            limit3 = bd.floatValue();
 
-            f3 = calculateEquation(limit3);
-
-            BigDecimal bd1 = new BigDecimal(f3).setScale(3, RoundingMode.HALF_EVEN);
-            f3 = bd1.floatValue();
-
-            Log.i("MyTag","limit3 is "+limit3);
-            createFValue(f1,f2);
-            createSLimit(limit3);
-            createNewInterval(limit3);
-            createValue(f3, limit3);
-            p++;
-        }
-        TextView tv = new TextView(this);
-        tv.setLayoutParams(layoutParams);
-        tv.setText("ОТВЕТ "+limit3);
-        outLayout.addView(tv);
-    }
-
-    void foundRoot(){
-        float f1,f2,f3;
-        float limit3 = limit1 + 100;
-        f1 = 0;
-        f2 = 0;
-        f3 = 0;
-        int p = 0;
-        boolean isNoFirst = false;
-        outLayout.removeAllViews();
-        equationTvLayout.removeAllViews();
-        createTextViewEquation();
-        while(checkInterval(limit1,limit3,limit2)){
-            if(isNoFirst) {
-                selectInterval(f1,f3,limit3);
-            }
-            if(p>20){
-                Toast.makeText(this,"Ошибка, нет корня", Toast.LENGTH_LONG).show();
-                return;
-            }
-            isNoFirst = true;
-            createTextLimit();
-            f1 = calculateEquation(limit1);
-            f2 = calculateEquation(limit2);
-            limit3 = limit1 - (f1*(limit2 - limit1)/(f2-f1));
-
-            BigDecimal bd = new BigDecimal(limit3).setScale(3, RoundingMode.HALF_EVEN);
-            limit3 = bd.floatValue();
-
-            f3 = calculateEquation(limit3);
-
-            BigDecimal bd1 = new BigDecimal(f3).setScale(3, RoundingMode.HALF_EVEN);
-            f3 = bd1.floatValue();
-
-            Log.i("MyTag","limit3 is "+limit3);
-            createFValue(f1,f2);
-            createChord(f1,f2,limit3);
-            createNewInterval(limit3);
-            createValue(f3, limit3);
-            p++;
-        }
-        TextView tv = new TextView(this);
-        tv.setLayoutParams(layoutParams);
-        tv.setText("ОТВЕТ "+limit3);
-        outLayout.addView(tv);
-
-        Log.i("MyTag","ОТВЕТ ЭТО " + limit3);
-    }
 
     void selectInterval(float lim1, float lim3, float lim){
         if((lim1>0&&lim3<0)||(lim1<0&&lim3>0)){
@@ -402,14 +408,8 @@ public class MainActivity extends AppCompatActivity {
 
     boolean checkInterval(float a, float b, float c){
         float v12 = Math.abs(Math.abs(a)-Math.abs(b));
-        Log.i("MyTag","v12 is "+v12);
-        float bb = Math.abs(b);
-        float cc = Math.abs(c);
-        Log.i("MyTag","bb is "+String.valueOf(bb)+" cc is "+String.valueOf(cc));
         float v23 = Math.abs(Math.abs(b)-Math.abs(c));
-        Log.i("MyTag","v23 is "+v23);
         boolean cheking = v12<=fault||v23<=fault;
-        Log.i("MyTag", "cheking is "+cheking);
         return !cheking;
 
     }
